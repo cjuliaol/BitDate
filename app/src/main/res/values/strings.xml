@@ -5,4 +5,5 @@
     <string name="facebook_app_id">495570877276821</string>
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="hello_signin">Hello from Sign in</string>
+    <string name="login_facebook_button">Login with Facebook</string>
 </resources>

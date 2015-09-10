@@ -1,16 +1,66 @@
 package com.example.thewizard.cjuliaol.bitdate;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignInActivity extends AppCompatActivity {
+
+    private static final String TAG = "SignInActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+
+
+        Button loginButton = (Button) findViewById(R.id.login_button);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                List<String> permissions = new ArrayList<String>();
+                permissions.add("user_birthday");
+                // CJL: To combine Parse with Facebook
+                ParseFacebookUtils.logInWithReadPermissionsInBackground(SignInActivity.this, permissions, new LogInCallback() {
+                    @Override
+                    public void done(ParseUser parseUser, ParseException e) {
+
+                        if (parseUser == null) {
+                            Log.d(TAG,"Error creating " + e.getMessage());
+                        } else if (parseUser.isNew()) {
+                            Log.d(TAG,"User Created");
+                        }
+                         else  {
+                            Log.d(TAG," User already logged in");
+                        }
+
+
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode,resultCode, data);
     }
 
     @Override
