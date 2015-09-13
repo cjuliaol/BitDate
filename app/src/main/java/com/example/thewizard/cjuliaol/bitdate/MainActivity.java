@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ParseUser.getCurrentUser() == null) {
+        if (UserDataSource.getCurrentUser() == null) {
             Intent intent = new Intent(MainActivity.this,SignInActivity.class);
             startActivity(intent);
         }

@@ -9,10 +9,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +32,6 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
 
 
         Button loginButton = (Button) findViewById(R.id.login_button);
@@ -42,12 +48,13 @@ public class SignInActivity extends AppCompatActivity {
                     public void done(ParseUser parseUser, ParseException e) {
 
                         if (parseUser == null) {
-                            Log.d(TAG,"Error creating " + e.getMessage());
+                            Log.d(TAG, "Error creating " + e.getMessage());
                         } else if (parseUser.isNew()) {
-                            Log.d(TAG,"User Created");
-                        }
-                         else  {
-                            Log.d(TAG," User already logged in");
+                            Log.d(TAG, "User Created");
+                            getFacebookInfo();
+                        } else {
+                            Log.d(TAG, " User already logged in");
+                            finish();
                         }
 
 
@@ -57,10 +64,39 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    private void getFacebookInfo() {
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "first_name,last_name,picture");
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me", parameters, HttpMethod.GET, new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse response) {
+
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                JSONObject facebookUser = response.getJSONObject();
+
+                currentUser.put("firstName",facebookUser.optString("first_name"));
+                currentUser.put("lastName",facebookUser.optString("last_name"));
+                currentUser.put("picture",facebookUser.optJSONObject("picture")
+                         .optJSONObject("data").optString("url")
+                );
+                currentUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            finish();
+                        }
+                    }
+                });
+
+            }
+        }).executeAsync();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode,resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
