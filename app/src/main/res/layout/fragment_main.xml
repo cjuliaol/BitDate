@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -9,14 +9,34 @@
   <com.example.thewizard.cjuliaol.bitdate.CardStackContainer
       android:id="@+id/card_stack"
       android:background="@android:color/holo_red_dark"
-      android:layout_gravity="center_horizontal"
+      android:layout_centerHorizontal="true"
       android:layout_marginTop="20dp"
       android:layout_width="250sp"
       android:layout_height="270dp"></com.example.thewizard.cjuliaol.bitdate.CardStackContainer>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/nah_button"
+            android:text="@string/nah_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+        <Button
+            android:id="@+id/yeah_button"
+            android:text="@string/yeah_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+    </LinearLayout>
 
     <TextView
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-</LinearLayout>
+</RelativeLayout>

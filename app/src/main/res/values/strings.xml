@@ -6,4 +6,6 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="hello_signin">Hello from Sign in</string>
     <string name="login_facebook_button">Login with Facebook</string>
+    <string name="nah_button">Nah</string>
+    <string name="yeah_button">Yeah</string>
 </resources>
