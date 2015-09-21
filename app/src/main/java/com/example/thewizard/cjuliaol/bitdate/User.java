@@ -8,6 +8,15 @@ public class User {
     private String mFirstName;
     private String mLastName;
     private String mPictureUrl;
+    private String mId;
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
 
     User() {
 

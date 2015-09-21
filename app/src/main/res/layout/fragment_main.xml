@@ -12,7 +12,7 @@
       android:layout_centerHorizontal="true"
       android:layout_marginTop="20dp"
       android:layout_width="250sp"
-      android:layout_height="270dp"></com.example.thewizard.cjuliaol.bitdate.CardStackContainer>
+      android:layout_height="320dp"></com.example.thewizard.cjuliaol.bitdate.CardStackContainer>
 
     <LinearLayout
         android:layout_alignParentBottom="true"
@@ -20,14 +20,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Button
+        <ImageButton
+            android:src="@drawable/ic_nah"
             android:id="@+id/nah_button"
+            android:background="@drawable/nah_button"
+            android:layout_margin="5dp"
             android:text="@string/nah_button"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
 
-        <Button
+        <ImageButton
+            android:src="@drawable/ic_yeah"
             android:id="@+id/yeah_button"
+            android:background="@drawable/yeah_button"
+            android:layout_margin="5dp"
             android:text="@string/yeah_button"
             android:layout_width="100dp"
             android:layout_height="100dp"/>

@@ -21,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new ChoosingFragment())
+                    .commit();
+        }
 
 
     }

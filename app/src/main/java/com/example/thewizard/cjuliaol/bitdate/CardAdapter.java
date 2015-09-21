@@ -5,7 +5,10 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -25,8 +28,16 @@ public class CardAdapter extends ArrayAdapter<User> {
     @Override
     public CardView  getView(int position, View convertView, ViewGroup parent) {
         CardView v = (CardView) super.getView(position, convertView, parent);
+
         TextView nameView = (TextView) v.findViewById(R.id.name);
         nameView.setText(getItem(position).getFirstName());
+
+        ImageView imageView = (ImageView) v.findViewById(R.id.profile_photo);
+
+        Picasso.with(getContext()).load(  getItem(position).getPictureUrl()).into(imageView);
+
+
+
         return v;
     }
 }

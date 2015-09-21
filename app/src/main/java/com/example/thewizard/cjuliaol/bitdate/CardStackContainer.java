@@ -1,6 +1,7 @@
 package com.example.thewizard.cjuliaol.bitdate;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,7 +33,21 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
 
     public void setCardAdapter(CardAdapter cardAdapter) {
         mCardAdapter = cardAdapter;
-        if (mCardAdapter.getCount() > 0) {
+        DataSetObserver dataSetObserver = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                addFrontCard();
+                addBackCard();
+            }
+        };
+        mCardAdapter.registerDataSetObserver(dataSetObserver);
+        addFrontCard();
+        addBackCard();
+    }
+
+    private void addFrontCard() {
+        if (mCardAdapter.getCount() > 0 && mFrontCard == null) {
             CardView cardView = mCardAdapter.getView(0, null, this);
             cardView.setOnTouchListener(this);
             cardView.setCardElevation(8);
@@ -41,12 +56,10 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
             addView(cardView);
             mNextPosition++;
         }
-
-        addBackCard();
     }
 
     private void addBackCard() {
-        if (mCardAdapter.getCount() > mNextPosition) {
+        if (mCardAdapter.getCount() > mNextPosition && mBackCard == null ) {
             CardView cardView = mCardAdapter.getView(mNextPosition, null, this);
             mBackCard = cardView;
             mBackCard.setCardElevation(8);
@@ -125,7 +138,7 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
             mFrontCard.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left));
         }
         removeView(mFrontCard);
-
+        mFrontCard  = null;
         if (mBackCard != null) {
             mBackCard.animate()
                     .translationY(0)

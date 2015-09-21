@@ -2,10 +2,12 @@ package com.example.thewizard.cjuliaol.bitdate;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +15,12 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ChoosingFragment extends Fragment {
-
+public class ChoosingFragment extends Fragment implements UserDataSource.UserDataCallback {
+    public static final String TAGFollowing ="CheckingProgramProcess";
     private CardStackContainer mCardStackContainer;
+    private List<User> mUsers;
+    private CardAdapter mCardAdapter;
+
 
     public ChoosingFragment() {
     }
@@ -25,28 +30,17 @@ public class ChoosingFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
-
-        User user1 = new User();
-        user1.setFirstName("Veronica");
-
-        User user2 = new User();
-        user2.setFirstName("Carla");
-
-
-        User user3 = new User();
-        user3.setFirstName("Peter");
-
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-
         mCardStackContainer = (CardStackContainer) view.findViewById(R.id.card_stack);
-        CardAdapter cardAdapter = new CardAdapter(getActivity(), users);
-        mCardStackContainer.setCardAdapter(cardAdapter);
 
-        Button nahButton = (Button) view.findViewById(R.id.nah_button);
+        Log.d(TAGFollowing, "Choosing Fragment: UserDataSource.getUsers");
+        UserDataSource.getUsers(this);
+
+        mUsers = new ArrayList<>();
+        mCardAdapter = new CardAdapter(getActivity(), mUsers);
+        mCardStackContainer.setCardAdapter(mCardAdapter);
+
+
+        ImageButton nahButton = (ImageButton) view.findViewById(R.id.nah_button);
         nahButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +48,7 @@ public class ChoosingFragment extends Fragment {
             }
         });
 
-        Button yeahButton = (Button) view.findViewById(R.id.yeah_button);
+        ImageButton yeahButton = (ImageButton) view.findViewById(R.id.yeah_button);
         yeahButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,5 +57,13 @@ public class ChoosingFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onUserFetched(List<User> users) {
+        Log.d(TAGFollowing, "Choosing Fragment: onUserFetched");
+        mUsers.addAll(users);
+        mCardAdapter.notifyDataSetChanged();
+
     }
 }
