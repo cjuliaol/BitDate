@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
@@ -15,8 +14,9 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ChoosingFragment extends Fragment implements UserDataSource.UserDataCallback {
+public class ChoosingFragment extends Fragment implements UserDataSource.UserDataCallback, CardStackContainer.SwipeCallbacks {
     public static final String TAGFollowing ="CheckingProgramProcess";
+    private static final String TAG = "ChoosingFragmentLog";
     private CardStackContainer mCardStackContainer;
     private List<User> mUsers;
     private CardAdapter mCardAdapter;
@@ -32,13 +32,14 @@ public class ChoosingFragment extends Fragment implements UserDataSource.UserDat
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         mCardStackContainer = (CardStackContainer) view.findViewById(R.id.card_stack);
 
-        Log.d(TAGFollowing, "Choosing Fragment: UserDataSource.getUsers");
-        UserDataSource.getUsers(this);
+        Log.d(TAGFollowing, "Choosing Fragment: UserDataSource.getUnseenUsers");
+        UserDataSource.getUnseenUsers(this);
 
         mUsers = new ArrayList<>();
         mCardAdapter = new CardAdapter(getActivity(), mUsers);
-        mCardStackContainer.setCardAdapter(mCardAdapter);
 
+        mCardStackContainer.setCardAdapter(mCardAdapter);
+        mCardStackContainer.setSwipeCallbacks(this);
 
         ImageButton nahButton = (ImageButton) view.findViewById(R.id.nah_button);
         nahButton.setOnClickListener(new View.OnClickListener() {
@@ -65,5 +66,18 @@ public class ChoosingFragment extends Fragment implements UserDataSource.UserDat
         mUsers.addAll(users);
         mCardAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onSwipedLeft(User user) {
+      Log.d(TAG,"Swipe Left " +user.getFirstName());
+
+        ActionDataSource.saveSkippedUser(user);
+    }
+
+    @Override
+    public void onSwipedRight(User user) {
+        Log.d(TAG, "Swipe Right " + user.getFirstName());
+        ActionDataSource.saveLikedUser(user);
     }
 }

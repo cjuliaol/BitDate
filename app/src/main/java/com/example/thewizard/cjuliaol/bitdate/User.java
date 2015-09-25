@@ -9,6 +9,11 @@ public class User {
     private String mLastName;
     private String mPictureUrl;
     private String mId;
+    private String mFacebookId;
+
+    public String getLargePicture() {
+        return "https://graph.facebook.com/v2.3/"+mFacebookId+"/picture?type=large";
+    }
 
     public String getId() {
         return mId;
@@ -20,6 +25,14 @@ public class User {
 
     User() {
 
+    }
+
+    public String getFacebookId() {
+        return mFacebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        mFacebookId = facebookId;
     }
 
     public String getFirstName() {

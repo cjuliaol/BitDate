@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -26,31 +27,46 @@ public class UserDataSource {
         return sCurrentUser;
     }
 
-    public static void getUsers(final UserDataCallback callback) {
-       final List<User> users = new ArrayList<User>();
-
-        ParseQuery<ParseUser> usersQuery = ParseUser.getQuery();
-        usersQuery.whereNotEqualTo("objectId", getCurrentUser().getId());
-
-        usersQuery.findInBackground(new FindCallback<ParseUser>() {
+    public static void getUnseenUsers(final UserDataCallback callback) {
+       ParseQuery<ParseObject> seenUsersQuery = new ParseQuery<ParseObject>(ActionDataSource.TABLE_NAME);
+        seenUsersQuery.whereEqualTo(ActionDataSource.COLUMN_BY_USER, ParseUser.getCurrentUser().getObjectId());
+        seenUsersQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseUser> list, ParseException e) {
-                Log.d(ChoosingFragment.TAGFollowing,"UserDataSource: getUsers : findInBackground");
-                if (list != null && e == null) {
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null && list.size()>0) {
+                     List<String> ids = new ArrayList<String>();
+                    for (ParseObject parseObject:list) {
+                        ids.add(ActionDataSource.COLUMN_TO_USER);
+                    }
+                    ParseQuery<ParseUser> usersQuery = ParseUser.getQuery();
+                    usersQuery.whereNotEqualTo("objectId", getCurrentUser().getId());
+                    usersQuery.whereNotContainedIn("objectId",ids);
 
-                    for (ParseUser parseUser : list) {
-                      User user = ParseUserToUser(parseUser);
-                       users.add(user);
-                        Log.d(TAG, user.getFirstName() + "- " + user.getLastName());
-                    }
-                    if (callback != null) {
-                        callback.onUserFetched(users);
-                        Log.d(ChoosingFragment.TAGFollowing, "UserDataSource: getUsers : findInBackground: callback.onUserFetched ");
-                    }
+                    usersQuery.findInBackground(new FindCallback<ParseUser>() {
+                        @Override
+                        public void done(List<ParseUser> list, ParseException e) {
+                            Log.d(ChoosingFragment.TAGFollowing,"UserDataSource: getUnseenUsers : findInBackground");
+                            if (list != null && e == null) {
+                                List<User> users = new ArrayList<User>();
+                                for (ParseUser parseUser : list) {
+                                    User user = ParseUserToUser(parseUser);
+                                    users.add(user);
+                                    Log.d(TAG, user.getFirstName() + "- " + user.getLastName());
+                                }
+                                if (callback != null) {
+                                    callback.onUserFetched(users);
+                                    Log.d(ChoosingFragment.TAGFollowing, "UserDataSource: getUnseenUsers : findInBackground: callback.onUserFetched ");
+                                }
+                            }
+
+                        }
+                    });
+
                 }
-
             }
         });
+
+
 
 
     }
@@ -60,6 +76,7 @@ public class UserDataSource {
         user.setFirstName(parseUser.getString("firstName"));
         user.setLastName(parseUser.getString("lastName"));
         user.setPictureUrl(parseUser.getString("picture"));
+        user.setFacebookId(parseUser.getString("facebookId"));
         user.setId(parseUser.getObjectId());
      return  user;
     }

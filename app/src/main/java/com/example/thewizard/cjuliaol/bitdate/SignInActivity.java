@@ -66,7 +66,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private void getFacebookInfo() {
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "first_name,last_name,picture");
+        parameters.putString("fields", "first_name,last_name,picture,id");
 
         new GraphRequest(AccessToken.getCurrentAccessToken(), "/me", parameters, HttpMethod.GET, new GraphRequest.Callback() {
             @Override
@@ -76,6 +76,7 @@ public class SignInActivity extends AppCompatActivity {
                 JSONObject facebookUser = response.getJSONObject();
 
                 currentUser.put("firstName",facebookUser.optString("first_name"));
+                currentUser.put("facebookId",facebookUser.optString("id"));
                 currentUser.put("lastName",facebookUser.optString("last_name"));
                 currentUser.put("picture",facebookUser.optJSONObject("picture")
                          .optJSONObject("data").optString("url")

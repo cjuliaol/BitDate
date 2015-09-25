@@ -1,6 +1,11 @@
 package com.example.thewizard.cjuliaol.bitdate;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,19 +22,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (UserDataSource.getCurrentUser() == null) {
-            Intent intent = new Intent(MainActivity.this,SignInActivity.class);
+            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
         }
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ChoosingFragment())
-                    .commit();
-        }
-
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
 
     }
 
+    public class PagerAdapter extends FragmentStatePagerAdapter {
+
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position)
+            {case  0:
+                return new ChoosingFragment();
+                case 1:
+                    return new MatchesFragment();
+
+            }
+            return null;
+        }
+
+
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
