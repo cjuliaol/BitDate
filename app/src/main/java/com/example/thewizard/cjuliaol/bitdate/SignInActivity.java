@@ -54,6 +54,7 @@ public class SignInActivity extends AppCompatActivity {
                             getFacebookInfo();
                         } else {
                             Log.d(TAG, " User already logged in");
+                            setResult(RESULT_OK);
                             finish();
                         }
 
@@ -85,6 +86,7 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }
