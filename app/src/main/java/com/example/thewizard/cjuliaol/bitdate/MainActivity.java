@@ -1,20 +1,31 @@
 package com.example.thewizard.cjuliaol.bitdate;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+
 
 import com.parse.ParseSession;
 import com.parse.ParseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+
+    private ImageView mChoosingIcon;
+    private ImageView mMatchesIcon;
+    private ViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +37,67 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mPager.setOnPageChangeListener(this);
 
+        mChoosingIcon = (ImageView) findViewById(R.id.logo_icon);
+        mChoosingIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPager.setCurrentItem(0);
+            }
+        });
+
+        mMatchesIcon = (ImageView) findViewById(R.id.chat_icon);
+        mMatchesIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPager.setCurrentItem(1);
+            }
+        });
+
+
+        mChoosingIcon.setSelected(true);
+
+        toggleColor(mChoosingIcon);
+        toggleColor(mMatchesIcon);
+
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        ActionBarDrawerToggle actionBarDrawerToggle =
+                new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mChoosingIcon.setSelected(!mChoosingIcon.isSelected());
+        mMatchesIcon.setSelected(!mMatchesIcon.isSelected());
+
+        toggleColor(mChoosingIcon);
+        toggleColor(mMatchesIcon);
+    }
+
+    public void toggleColor(ImageView v) {
+        if (v.isSelected()) {
+            v.setColorFilter(Color.WHITE);
+        } else {
+            v.setColorFilter(getResources().getColor(R.color.primary_dark_blue));
+        }
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
@@ -40,16 +109,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
 
-            switch (position)
-            {case  0:
-                return new ChoosingFragment();
+            switch (position) {
+                case 0:
+                    return new ChoosingFragment();
                 case 1:
                     return new MatchesFragment();
 
             }
             return null;
         }
-
 
 
         @Override
