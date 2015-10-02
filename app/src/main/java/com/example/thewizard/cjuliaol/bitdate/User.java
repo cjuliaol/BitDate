@@ -1,9 +1,11 @@
 package com.example.thewizard.cjuliaol.bitdate;
 
+import java.io.Serializable;
+
 /**
  * Created by cjuliaol on 11-Sep-15.
  */
-public class User {
+public class User implements Serializable{
 
     private String mFirstName;
     private String mLastName;
