@@ -34,7 +34,7 @@ public class UserDataSource {
         seenUsersQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list.size()>0) {
+                if (e == null ) {
                      List<String> ids = new ArrayList<String>();
                     for (ParseObject parseObject:list) {
                         ids.add(ActionDataSource.COLUMN_TO_USER);

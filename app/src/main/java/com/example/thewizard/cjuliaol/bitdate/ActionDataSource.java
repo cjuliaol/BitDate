@@ -41,7 +41,7 @@ public class ActionDataSource {
                     otherAction.saveInBackground();
                     action = createAction(user, TYPE_MATCHED);
                 } else {
-                    action = createAction(user, TYPE_MATCHED);
+                    action = createAction(user, TYPE_LIKED);
                 }
                 action.saveInBackground();
             }
